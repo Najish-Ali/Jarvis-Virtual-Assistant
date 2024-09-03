@@ -25,7 +25,7 @@ Jarvis is a Python-based virtual assistant designed to simplify your day-to-day 
 
 1. **Clone the Repository:**
     ```bash
-    git clone https://github.com/yourusername/jarvis-assistant.git
+    git clone https://github.com/N176/Jarvis-Virtual-Assistant.git
     cd jarvis-assistant
     ```
 
@@ -43,7 +43,7 @@ Jarvis is a Python-based virtual assistant designed to simplify your day-to-day 
 
 1. **Clone the Repository:**
     ```bash
-    git clone https://github.com/yourusername/jarvis-assistant.git
+    git clone https://github.com/N176/Jarvis-Virtual-Assistant.git
     cd jarvis-assistant
     ```
 
