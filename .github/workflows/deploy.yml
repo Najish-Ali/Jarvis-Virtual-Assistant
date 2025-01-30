@@ -1,56 +1,62 @@
-name: CI/CD for Jarvis-Virtual-Assistant
+name: CI/CD for Jarvis
 
 on:
   push:
     branches:
-      - master  # Trigger workflow on push to main branch
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   test:
-    name: Run Tests
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - name: Check out the repository
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: '3.9'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           python -m venv venv
           source venv/bin/activate
+          pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest  # Ensure pytest is installed
 
-      - name: Run Tests
+      - name: Run tests
         run: |
           source venv/bin/activate
-          pytest --disable-warnings
-  
-  build:
-    name: Build Docker Image
+          pytest
+
+  deploy:
     needs: test
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - name: Check out the repository
+        uses: actions/checkout@v3
 
-      - name: Log in to AWS
+      - name: Set up AWS CLI
         run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set region ${{ secrets.AWS_REGION }}
+          sudo apt-get update
+          sudo apt-get install -y awscli
 
-      - name: Build Docker Image
-        run: docker build -t jarvis-virtual-assistant .
+      - name: Configure AWS Credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set region ap-south-1  # Change to your AWS region
 
-      - name: Save Docker Image as Tar File
-        run: docker save -o jarvis.tar jarvis-virtual-assistant
-
-      - name: Upload to AWS S3
-        run: aws s3 cp jarvis.tar s3://${{ secrets.S3_BUCKET_NAME }}/jarvis.tar
+      - name: Upload to S3
+        run: |
+          aws s3 sync . s3://your-s3-bucket-name --exclude ".git/*" --exclude "venv/*"
 
