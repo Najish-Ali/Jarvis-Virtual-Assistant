@@ -1,25 +1,26 @@
-name: CI/CD for Jarvis
+name: CI/CD for Jarvis Virtual Assistant
 
 on:
   push:
     branches:
-      - master
+      - master  # Runs on push to master
   pull_request:
     branches:
-      - master
+      - master  # Runs on PR to master
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
 
       - name: Install dependencies
         run: |
@@ -27,36 +28,32 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest  # Ensure pytest is installed
+
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)/src" >> $GITHUB_ENV
 
       - name: Run tests
         run: |
           source venv/bin/activate
-          pytest
+          pytest --maxfail=5 --disable-warnings
 
   deploy:
-    needs: test
+    needs: build-and-test  # Only runs if tests pass
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1  # Change to your region
 
-      - name: Configure AWS Credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Deploy to S3
         run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set region ap-south-1  # Change to your AWS region
-
-      - name: Upload to S3
-        run: |
-          aws s3 sync . s3://your-s3-bucket-name --exclude ".git/*" --exclude "venv/*"
+          aws s3 sync . s3://your-s3-bucket-name --delete
+          echo "Deployment to S3 completed."
 
