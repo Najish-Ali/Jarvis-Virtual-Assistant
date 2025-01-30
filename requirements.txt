@@ -5,4 +5,5 @@ pyttsx3
 pygame
 requests
 openai
+pytest
 speechrecognition

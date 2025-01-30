@@ -1,5 +1,6 @@
 import unittest  # Import the unittest library to create and run tests
 from src.voice_assistant import VoiceAssistant  # Import the VoiceAssistant class to be tested
+from src.command_processor import process_command
 
 class TestVoiceAssistant(unittest.TestCase):
     """
