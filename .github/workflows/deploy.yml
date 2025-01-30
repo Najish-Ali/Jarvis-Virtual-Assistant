@@ -1,0 +1,56 @@
+name: CI/CD for Jarvis-Virtual-Assistant
+
+on:
+  push:
+    branches:
+      - master  # Trigger workflow on push to main branch
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run Tests
+        run: |
+          source venv/bin/activate
+          pytest --disable-warnings
+  
+  build:
+    name: Build Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Log in to AWS
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+
+      - name: Build Docker Image
+        run: docker build -t jarvis-virtual-assistant .
+
+      - name: Save Docker Image as Tar File
+        run: docker save -o jarvis.tar jarvis-virtual-assistant
+
+      - name: Upload to AWS S3
+        run: aws s3 cp jarvis.tar s3://${{ secrets.S3_BUCKET_NAME }}/jarvis.tar
+
