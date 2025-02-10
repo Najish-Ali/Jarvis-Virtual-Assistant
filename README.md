@@ -1,4 +1,4 @@
-`# Jarvis Virtual Assistant 🤖
+# Jarvis Virtual Assistant 🤖
 
 Jarvis is a **Python-based virtual assistant** designed to streamline your daily tasks using voice commands. By leveraging advanced technologies like **speech recognition** and **text-to-speech**, Jarvis makes it easier to interact with your digital world. Whether it's opening websites, playing music, or keeping you updated with the latest news, Jarvis is here to make your life simpler!
 
