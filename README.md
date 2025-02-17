@@ -34,24 +34,18 @@ Using Docker simplifies the deployment process, ensuring you can run the assista
 
    ```bash
    git clone https://github.com/N176/Jarvis-Virtual-Assistant.git
-   cd Jarvis-Virtual-Assistant `
+   cd Jarvis-Virtual-Assistant 
 
 1.  **Build the Docker Image**:
+    ```
+    docker-compose build
+    ```
 
-    bash
+3.  **Run Jarvis**:
 
-    Copy code
-
-    `docker-compose build`
-
-2.  **Run Jarvis**:
-
-    bash
-
-    Copy code
-
-    `docker-compose up`
-
+    ```
+    docker-compose up
+    ```
     This will start the assistant in a Docker container. Jarvis will be ready to interact with you via voice commands.
 
 * * * * *
@@ -62,47 +56,37 @@ If you prefer to run Jarvis locally, follow these steps:
 
 1.  **Clone the Repository**:
 
-    bash
-
-    Copy code
-
-    `git clone https://github.com/N176/Jarvis-Virtual-Assistant.git
-    cd Jarvis-Virtual-Assistant`
-
+    ```
+    git clone https://github.com/N176/Jarvis-Virtual-Assistant.git
+    cd Jarvis-Virtual-Assistant
+    ```
+    
 2.  **Set up a Virtual Environment**:
 
-    bash
-
-    Copy code
-
-    `python -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate``
-
+    ```
+    python -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate
+    ```
+    
 3.  **Install Dependencies**:
 
-    bash
+    ```
+    pip install -r requirements.txt
+    ```
+    
+5.  **Set Up Environment Variables**: Create a `.env` file in the root directory and add the following (replace with your actual API keys):
 
-    Copy code
+    ```
+    OPENAI_API_KEY=your_openai_api_key
+    NEWSAPI_KEY=your_newsapi_key
+    ```
+    
+6.  **Run the Application**:
 
-    `pip install -r requirements.txt`
-
-4.  **Set Up Environment Variables**: Create a `.env` file in the root directory and add the following (replace with your actual API keys):
-
-    bash
-
-    Copy code
-
-    `OPENAI_API_KEY=your_openai_api_key
-    NEWSAPI_KEY=your_newsapi_key`
-
-5.  **Run the Application**:
-
-    bash
-
-    Copy code
-
-    `python src/main.py`
-
+    ```
+    python src/main.py
+    ```
+    
 * * * * *
 
 🎤 Usage
@@ -125,11 +109,9 @@ If you prefer to run Jarvis locally, follow these steps:
 
 To test if Jarvis is running smoothly, run the following:
 
-bash
-
-Copy code
-
-`pytest`
+```
+pytest
+```
 
 This will run the tests and check that everything is working as expected.
 
