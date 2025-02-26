@@ -54,7 +54,6 @@ def process_command(command, speak_fucntion, ai_process_function):
         output = ai_process_function(command)
         speak_fucntion(output)
 
-
 # fetch_news Function
 def fetch_news(speak_function):
     #  Retrieves the API key for the News API from environment variables.
