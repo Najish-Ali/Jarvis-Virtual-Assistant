@@ -1,12 +1,8 @@
 name: CI/CD for Jarvis Virtual Assistant
 
 on:
-  push:
-    branches:
-      - dev  # Runs on push to dev Branch
-  pull_request:
-    branches:
-      - dev  # Runs on PR to dev Branch
+  push: dev  # Runs on push to dev Branch
+  pull_request: dev # Runs on PR to dev Branch
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -36,4 +32,3 @@ jobs:
         run: |
           source venv/bin/activate
           pytest --maxfail=5 --disable-warnings
-
