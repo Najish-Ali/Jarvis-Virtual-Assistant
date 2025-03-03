@@ -1,7 +1,6 @@
 # Python-specific files
 *.pyc
 *.pyo
-__pycache__/
 
 # Virtual environment directories
 venv/
