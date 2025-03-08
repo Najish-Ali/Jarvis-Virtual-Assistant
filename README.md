@@ -131,8 +131,6 @@ Copy code
 
 `pytest`
 
-This will run the tests and check that everything is working as expected.
-
 * * * * *
 
 💡 Contributing
